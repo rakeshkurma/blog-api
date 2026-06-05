@@ -2,6 +2,8 @@ package com.portfolio.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 // 1. ADD THIS IMPORT
@@ -23,7 +25,7 @@ public class SecurityConfig {
                 // 2. Configure endpoint rules
                 .authorizeHttpRequests(auth -> auth
                         // Allow anyone to access the registration endpoint
-                        .requestMatchers("/api/users/register").permitAll()
+                        .requestMatchers("/api/users/register","/api/users/login","/api/users/post","/api/users/getposts","/api/users/postComment").permitAll()
                         // Any other request must be authenticated
                         .anyRequest().authenticated()
                 )
@@ -38,4 +40,10 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+        return authConfig.getAuthenticationManager();
+    }
+
 }
